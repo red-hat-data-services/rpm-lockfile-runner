@@ -2,7 +2,7 @@
 
 This is a tool that you can use to create the RPM lockfiles that are used by Hermeto. Two main use cases:
 
-- For Mac users who have had difficulty using the [RPM lockfile generator] tool
+- For users who have had difficulty using the [RPM lockfile prototype](https://github.com/konflux-ci/rpm-lockfile-prototype) tool
 - For multi-stage builds, automating the combination of rpms.lock.yaml files between stages
 
 ## Instructions
