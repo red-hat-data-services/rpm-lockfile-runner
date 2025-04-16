@@ -7,6 +7,11 @@ export CONFIG_FILE=config.yaml
 trap "rm *.tmp" EXIT
 
 indices=$(yq '.stages[] | path[1]' $CONFIG_FILE)
+if [ "$(uname -s)" = "Darwin" ]; then
+  function sed {
+    gsed "$@"
+  }
+fi
 
 # loop over the stages and generate lockfiles for each stage
 for i in $indices; do
@@ -32,12 +37,12 @@ for i in $indices; do
   # produce an ubi.repo file
   podman run -it $BASE_IMAGE cat /etc/yum.repos.d/ubi.repo > $TEMP_UBI_REPO
   # Enable all listed repos
-  sed -Ei '' 's/^enabled = 0/enabled = 1/' $TEMP_UBI_REPO
+  sed -Ei 's/^enabled = 0/enabled = 1/' $TEMP_UBI_REPO
 
   # add for-$basearch in the appropriate spots 
   # needs to match https://security.access.redhat.com/data/metrics/repository-to-cpe.json
-  sed -Ei '' 's/ubi-([0-9]+)-codeready-builder/codeready-builder-for-ubi-\1-$basearch/' $TEMP_UBI_REPO
-  sed -Ei '' 's/\[ubi-([0-9]+)/[ubi-\1-for-$basearch/' $TEMP_UBI_REPO
+  sed -Ei 's/ubi-([0-9]+)-codeready-builder/codeready-builder-for-ubi-\1-$basearch/' $TEMP_UBI_REPO
+  sed -Ei 's/\[ubi-([0-9]+)/[ubi-\1-for-$basearch/' $TEMP_UBI_REPO
   
   # cat $TEMP_UBI_REPO
   container_dir='/work'
