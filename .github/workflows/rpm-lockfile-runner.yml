@@ -23,7 +23,8 @@ jobs:
         id: get_branch
       - name: Install dependencies
         run: |
-          sudo apt-get -y install yq jq skopeo podman
+          sudo apt-get -y install jq skopeo podman
+          sudo snap install yq --channel=v4/stable
           curl https://raw.githubusercontent.com/konflux-ci/rpm-lockfile-prototype/refs/heads/main/Containerfile | podman build -t localhost/rpm-lockfile-prototype -
       # Runs a set of commands using the runners shell
       - name: Run the Lockfile generator
