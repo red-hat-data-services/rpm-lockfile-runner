@@ -1,0 +1,12 @@
+arches:
+- x86_64
+stages:
+- image: registry.redhat.io/ubi8/go-toolset:1.22@sha256:a1a37882bbcf1c0f1115d478d5ea9f74b496b8c753d5e4e431a70786e2dbcbfc
+  packages:
+    - cmake
+    - clang
+    - openssl
+- image: registry.redhat.io/ubi8/ubi-minimal@sha256:33161cf5ec11ea13bfe60cad64f56a3aa4d893852e8ec44b2fd2a6b40cc38539
+  packages:
+    - ca-certificates
+    - wget
