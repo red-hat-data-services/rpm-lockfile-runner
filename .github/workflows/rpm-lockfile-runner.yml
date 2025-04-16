@@ -17,6 +17,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+      - name: Get Current branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: get_branch
       - name: Install dependencies
         run: |
           sudo apt-get -y install yq jq skopeo podman
@@ -28,3 +32,12 @@ jobs:
           bash src/runner.sh
           cat ubi.repo
           cat rpms.lock.yaml
+      - name: Commit and push the changes to release branch
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.get_branch.outputs.branch }}
+          message: "Updating branch with lockfile and ubi.repo"
+          rebase: true
+          author_name: Openshift-AI DevOps
+          author_email: openshift-ai-devops@redhat.com
