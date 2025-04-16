@@ -34,4 +34,4 @@ This is a tool that you can use to create the RPM lockfiles that are used by Her
 
 3. Commit changes to your branch
 4. Go to the [RPM lockfile runner](https://github.com/red-hat-data-services/rpm-lockfile-runner/actions/workflows/rpm-lockfile-runner.yml) actions page and run the workflow, selecting your specific branch
-5. After it is complete, you should have an rpms.lock.yaml and ubi.repo commited to your branch
+5. After it is complete, you should have an `rpms.lock.yaml` and `ubi.repo` commited to your branch that you can copy to wherever you need
