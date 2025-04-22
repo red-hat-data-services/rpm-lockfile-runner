@@ -60,7 +60,9 @@ cat ubi.repo.*.tmp > ubi.repo
 # consolidate rpms.lock.yaml files
 export ARCHES=$(yq '.arches[]' $CONFIG_FILE)
 
-cp rpms.lock.yaml.1.tmp rpms.lock.yaml
+ls -al
+
+cp rpms.lock.yaml.0.tmp rpms.lock.yaml
 
 yq -i 'with(.arches[]; .packages |= [] | .source |= [] | .module_metadata |= [])' rpms.lock.yaml
 
