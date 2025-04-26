@@ -1,13 +1,6 @@
 arches:
 - x86_64
-- s390x
 stages:
-- image: registry.redhat.io/ubi8/go-toolset:1.22@sha256:a1a37882bbcf1c0f1115d478d5ea9f74b496b8c753d5e4e431a70786e2dbcbfc
+- image: registry.access.redhat.com/ubi9/python-312:1@sha256:a12a2ef4e1ecd34c0d149397ee281b703c0b58d345279c8a8015d46680207399
   packages:
-    - cmake
-    - clang
-    - openssl
-- image: registry.redhat.io/ubi8/ubi-minimal@sha256:33161cf5ec11ea13bfe60cad64f56a3aa4d893852e8ec44b2fd2a6b40cc38539
-  packages:
-    - ca-certificates
-    - wget
+    - skopeo
