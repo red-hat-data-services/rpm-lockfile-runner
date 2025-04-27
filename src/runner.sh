@@ -43,6 +43,10 @@ for i in $indices; do
   # needs to match https://security.access.redhat.com/data/metrics/repository-to-cpe.json
   sed -Ei 's/ubi-([0-9]+)-codeready-builder/codeready-builder-for-ubi-\1-$basearch/' $TEMP_UBI_REPO
   sed -Ei 's/\[ubi-([0-9]+)/[ubi-\1-for-$basearch/' $TEMP_UBI_REPO
+
+  # Add '-rpms' suffix to repo-id to match the konflux allowed repo-id list
+  # https://github.com/release-engineering/rhtap-ec-policy/blob/main/data/known_rpm_repositories.yml
+  python src/sanitize-ubi-repo.py $TEMP_UBI_REPO
   
   # cat $TEMP_UBI_REPO
   container_dir='/work'
@@ -56,6 +60,10 @@ done
 
 # consolidate ubi.repo files
 cat ubi.repo.*.tmp > ubi.repo
+
+# remove duplicates and add '-rpms' suffix
+python src/sanitize-ubi-repo.py ubi.repo
+
 
 # consolidate rpms.lock.yaml files
 export ARCHES=$(yq '.arches[]' $CONFIG_FILE)
