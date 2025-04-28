@@ -46,7 +46,7 @@ for i in $indices; do
 
   # Add '-rpms' suffix to repo-id to match the konflux allowed repo-id list
   # https://github.com/release-engineering/rhtap-ec-policy/blob/main/data/known_rpm_repositories.yml
-  python src/sanitize-ubi-repo.py $TEMP_UBI_REPO
+  #python src/sanitize-ubi-repo.py $TEMP_UBI_REPO
   
   # cat $TEMP_UBI_REPO
   container_dir='/work'
@@ -62,7 +62,7 @@ done
 cat ubi.repo.*.tmp > ubi.repo
 
 # remove duplicates and add '-rpms' suffix
-python src/sanitize-ubi-repo.py ubi.repo
+#python src/sanitize-ubi-repo.py ubi.repo
 
 
 # consolidate rpms.lock.yaml files
