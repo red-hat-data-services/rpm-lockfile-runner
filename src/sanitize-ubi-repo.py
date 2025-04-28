@@ -1,7 +1,7 @@
 import re
 import argparse
 
-# Function to process the INI file manually (handling duplicates, adding suffixes, and ensuring only one blank line between sections)
+
 def process_ini_file(input_file):
     print(f"Processing file: {input_file}")
 
@@ -27,13 +27,6 @@ def process_ini_file(input_file):
         
         print()
         print(f"Processing section: {section_name}")
-
-        # Add '-rpms' suffix if not already there
-        if not section_name.endswith('-rpms'):
-            print(f"Suffix '-rpms' added to section: {section_name}")
-            section_name = f"{section_name}-rpms"
-        else:
-            print(f"Section '{section_name}' already has the '-rpms' suffix.")
 
         # If we've already seen this section, skip it
         if section_name in seen_sections:
