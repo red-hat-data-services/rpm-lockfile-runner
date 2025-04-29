@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+echo "==================================================="
+echo " Generating Lock Files"
+echo "==================================================="
+
+
 export CONFIG_FILE=config.yaml
 
 
@@ -15,6 +20,9 @@ fi
 
 # loop over the stages and generate lockfiles for each stage
 for i in $indices; do
+  echo ""
+  echo "-------| Processing Stage: ${i} |-------"
+  echo ""
   export i
   export TEMP_RPMS_IN="rpms.in.yaml.${i}.tmp"
   export TEMP_UBI_REPO="ubi.repo.${i}.tmp"
@@ -34,30 +42,47 @@ for i in $indices; do
   yq -i '.context.image = strenv(BASE_IMAGE)' $TEMP_RPMS_IN
   # cat $TEMP_RPMS_IN
   
-  # produce an ubi.repo file
-  podman run -it $BASE_IMAGE cat /etc/yum.repos.d/ubi.repo > $TEMP_UBI_REPO
-  # Enable all listed repos
+  echo "> Generate ubi.repo file."
+  podman run --platform=linux/amd64 -it $BASE_IMAGE cat /etc/yum.repos.d/ubi.repo > $TEMP_UBI_REPO
+  
+
+  echo "> Enable all listed repos"
   sed -Ei 's/^enabled = 0/enabled = 1/' $TEMP_UBI_REPO
 
   # add for-$basearch in the appropriate spots 
   # needs to match https://security.access.redhat.com/data/metrics/repository-to-cpe.json
+  echo "> Append arch variable to repo-ids"
   sed -Ei 's/ubi-([0-9]+)-codeready-builder/codeready-builder-for-ubi-\1-$basearch/' $TEMP_UBI_REPO
   sed -Ei 's/\[ubi-([0-9]+)/[ubi-\1-for-$basearch/' $TEMP_UBI_REPO
+
+  # Add '-rpms' suffix to repo-id to match the konflux allowed repo-id list
+  # https://github.com/release-engineering/rhtap-ec-policy/blob/main/data/known_rpm_repositories.yml
+  echo "> Sanitize repo file"
+  python src/sanitize-ubi-repo.py $TEMP_UBI_REPO
   
   # cat $TEMP_UBI_REPO
+
+  echo "> Generate lock files"
   container_dir='/work'
-  podman run --rm -v "${PWD}:${container_dir}" \
+  podman run --platform=linux/amd64 --rm -v "${PWD}:${container_dir}" \
     localhost/rpm-lockfile-prototype:latest \
     --outfile "$container_dir/$TEMP_LOCKFILE" \
     "$container_dir/$TEMP_RPMS_IN"
+
+  echo "---------| Processing Completed |---------"
   
 done
 
 
-# consolidate ubi.repo files
+echo ""
+echo "> Consolidate ubi.repo files"
 cat ubi.repo.*.tmp > ubi.repo
 
-# consolidate rpms.lock.yaml files
+echo "> Remove duplicate entries."
+python src/sanitize-ubi-repo.py ubi.repo
+
+
+echo "> Consolidate rpms.lock.yaml files"
 export ARCHES=$(yq '.arches[]' $CONFIG_FILE)
 
 ls -al
@@ -73,11 +98,11 @@ for arch in $ARCHES; do
     as $item ireduce ({}; . *+ $item )' rpms.lock.yaml.*.tmp > $arch_data
     yq -i 'with(.arches[]; select(.arch==strenv(arch)) |= load(strenv(arch_data)))' rpms.lock.yaml
 done
-echo "final lockfile has been saved to rpms.lock.yaml"
+echo "  final lockfile has been saved to rpms.lock.yaml"
 # cat rpms.lock.yaml
 
-
-echo "validating repoids with source of truth"
+echo ""
+echo "> Validate repoids with source of truth"
 export VALID_REPOS_FILE=repository-to-cpe.tmp
 REPO_SOURCE_OF_TRUTH=https://security.access.redhat.com/data/metrics/repository-to-cpe.json
 curl "$REPO_SOURCE_OF_TRUTH" | jq -r '.data|keys[]' > $VALID_REPOS_FILE
@@ -91,11 +116,10 @@ for repo_id in $REPO_IDS; do
 done
 
 if [ -n "$INVALID_REPOS" ]; then
-  echo "The following repos were not found in $REPO_SOURCE_OF_TRUTH:"
+  echo "  The following repos were not found in $REPO_SOURCE_OF_TRUTH:"
   echo $INVALID_REPOS
   exit 1
 fi
 
-echo "repo validation success"
-echo "exiting"
+
 
