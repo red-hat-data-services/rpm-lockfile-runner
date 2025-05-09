@@ -1,13 +1,14 @@
 arches:
 - x86_64
-- s390x
 stages:
-- image: registry.redhat.io/ubi8/go-toolset:1.22@sha256:a1a37882bbcf1c0f1115d478d5ea9f74b496b8c753d5e4e431a70786e2dbcbfc
+# Dockerfile.konflux.api, builder step
+- image: registry.access.redhat.com/ubi9/go-toolset:1.22@sha256:e4193e71ea9f2e2504f6b4ee93cadef0fe5d7b37bba57484f4d4229801a7c063
   packages:
-    - cmake
-    - clang
-    - openssl
-- image: registry.redhat.io/ubi8/ubi-minimal@sha256:33161cf5ec11ea13bfe60cad64f56a3aa4d893852e8ec44b2fd2a6b40cc38539
+  - cmake
+  - clang
+  - openssl
+# Dockerfile.konflux.api final step
+- image: registry.access.redhat.com/ubi9/ubi-minimal@sha256:e1c4703364c5cb58f5462575dc90345bcd934ddc45e6c32f9c162f2b5617681c
   packages:
-    - ca-certificates
-    - wget
+  - ca-certificates
+  - wget
