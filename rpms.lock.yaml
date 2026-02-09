@@ -1412,7 +1412,7 @@ arches:
         name: vim
         evr: 2:8.0.1763-21.el8_10
     module_metadata:
-      - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/repodata/69c12fe0c5c910f40b66b6d8c52c03e4e878aa0ac40846fcbe1b5536b805b614-modules.yaml.gz
+      - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi8/8/x86_64/appstream/os/repodata/35b5ee964ce2525c9f7cffb1a0f5b535f4d5c6e85028342b063c3dbd92d7f70f-modules.yaml.gz
         repoid: ubi-8-for-x86_64-appstream-rpms
         size: 59425
-        checksum: sha256:69c12fe0c5c910f40b66b6d8c52c03e4e878aa0ac40846fcbe1b5536b805b614
+        checksum: sha256:35b5ee964ce2525c9f7cffb1a0f5b535f4d5c6e85028342b063c3dbd92d7f70f
