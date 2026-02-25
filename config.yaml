@@ -1,17 +1,14 @@
 arches:
 - x86_64
-- aarch64
-- ppc64le
 stages:
 # Dockerfile.konflux.api, builder step
-- image: registry.access.redhat.com/ubi9/go-toolset:1.24@sha256:6234f572204d672a0ee0686d748fbb9b7b05679368bf0d7a4446e13970e58060
+- image: registry.access.redhat.com/ubi8/go-toolset:1.25@sha256:d3086455658222fcb72fe73c255f10400cc3524faa914dc2a4ecdb4973f5cd27
   packages:
   - cmake
   - clang
-  - llvm
   - openssl
 # Dockerfile.konflux.api final step
-- image: registry.access.redhat.com/ubi9/ubi-minimal@sha256:c7d44146f826037f6873d99da479299b889473492d3c1ab8af86f08af04ec8a0
+- image: registry.redhat.io/ubi8/ubi-minimal@sha256:6ed9271b3d3e7147728afaf8917a936c0db2f1badba59550288c2cc772afb58f
   packages:
   - ca-certificates
   - wget
