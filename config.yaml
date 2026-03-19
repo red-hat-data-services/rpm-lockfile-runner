@@ -1,13 +1,18 @@
 arches:
 - x86_64
-- s390x
 stages:
-- image: registry.redhat.io/ubi8/go-toolset:1.22@sha256:a1a37882bbcf1c0f1115d478d5ea9f74b496b8c753d5e4e431a70786e2dbcbfc
+- image: registry.redhat.io/ubi8/ubi-minimal@sha256:1352e7792cd20b906b6f3326f2ce714ae9f2ccf6ba06e7132759afa5efe26e3b
   packages:
-    - cmake
+    - which
+    - patch
+    - gcc
     - clang
+    - cmake
+    - make
     - openssl
-- image: registry.redhat.io/ubi8/ubi-minimal@sha256:33161cf5ec11ea13bfe60cad64f56a3aa4d893852e8ec44b2fd2a6b40cc38539
-  packages:
     - ca-certificates
-    - wget
+    - unzip
+    - git
+    - findutils
+    - python3
+    - rsync
