@@ -4,12 +4,7 @@ arches:
 - s390x
 - ppc64le
 stages:
-- image: registry.redhat.io/ubi8/go-toolset:1.22@sha256:a1a37882bbcf1c0f1115d478d5ea9f74b496b8c753d5e4e431a70786e2dbcbfc
+- image: quay.io/aipcc/base-images/cpu@sha256:36b603109f905559dd149f653f261f0083f9ec5326f7c710239dfd0307c3d946
   packages:
-    - cmake
-    - clang
-    - openssl
-- image: registry.redhat.io/ubi8/ubi-minimal@sha256:33161cf5ec11ea13bfe60cad64f56a3aa4d893852e8ec44b2fd2a6b40cc38539
-  packages:
-    - ca-certificates
-    - wget
+    - java-17-openjdk-devel
+    - tini
