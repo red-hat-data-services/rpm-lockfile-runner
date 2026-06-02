@@ -7,4 +7,3 @@ stages:
 - image: registry.redhat.io/ubi9/ubi-minimal:latest
   packages:
     - java-17-openjdk-devel
-    - tini
