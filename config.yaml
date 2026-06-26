@@ -4,7 +4,7 @@ arches:
 - ppc64le
 - s390x
 stages:
-- image: rust-builder
+- image: registry.access.redhat.com/ubi9/ubi-minimal:latest
   packages:
     - rust
     - cargo
